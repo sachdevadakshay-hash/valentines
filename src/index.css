@@ -4,53 +4,139 @@
 
 /* Custom animations */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  14% { transform: scale(1.1); }
-  28% { transform: scale(1); }
-  42% { transform: scale(1.1); }
-  70% { transform: scale(1); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  14% {
+    transform: scale(1.1);
+  }
+
+  28% {
+    transform: scale(1);
+  }
+
+  42% {
+    transform: scale(1.1);
+  }
+
+  70% {
+    transform: scale(1);
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.4); }
-  50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.8); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(236, 72, 153, 0.8);
+  }
 }
 
 @keyframes confetti-fall {
-  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
 }
 
 @keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0); }
-  50% { opacity: 1; transform: scale(1); }
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes bounce-in {
-  0% { transform: scale(0); opacity: 0; }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes slide-up {
-  0% { transform: translateY(20px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes float-heart {
-  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
-  50% { transform: translateY(-30px) rotate(10deg); opacity: 0.6; }
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+
+  5% {
+    opacity: 0.6;
+  }
+
+  95% {
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: translateY(-110vh) translateX(20px);
+    opacity: 0;
+  }
 }
 
 .animate-float {
@@ -81,11 +167,12 @@
   animation: slide-up 0.5s ease-out forwards;
 }
 
-/* Gradient background */
+/* Hello Kitty pattern background */
 .valentine-gradient {
-  background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 25%, #f9a8d4 50%, #f472b6 75%, #ec4899 100%);
-  background-size: 400% 400%;
-  animation: gradient-shift 15s ease infinite;
+  background-image: url('/bg3.jpeg');
+  background-repeat: repeat;
+  background-size: 400px;
+  background-position: center;
 }
 
 /* Glass effect */
@@ -115,8 +202,9 @@
 /* Floating hearts background */
 .floating-heart {
   position: absolute;
-  opacity: 0.3;
-  animation: float-heart 8s ease-in-out infinite;
+  bottom: -50px;
+  opacity: 0;
+  animation: float-heart 8s linear infinite;
 }
 
 /* Custom scrollbar */
@@ -155,12 +243,12 @@ button {
     padding: 1.5rem;
     margin: 0.5rem;
   }
-  
+
   .btn-yes {
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
   }
-  
+
   .btn-no {
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
@@ -169,11 +257,391 @@ button {
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   Valentine's Week Page Styles
+   ============================================ */
+
+/* Valentine Title */
+.valentine-title {
+  text-shadow: 2px 2px 4px rgba(236, 72, 153, 0.2);
+  line-height: 1.3;
+}
+
+/* Day Counter */
+.day-counter {
+  display: inline-block;
+  background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #be185d;
+  border: 2px solid #f9a8d4;
+}
+
+/* Progress Bar */
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.progress-bow {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(236, 72, 153, 0.3));
+}
+
+.progress-bar-track {
+  flex: 1;
+  height: 40px;
+  background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+  border-radius: 25px;
+  border: 2px solid #f9a8d4;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.progress-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #f9a8d4 0%, #ec4899 50%, #be185d 100%);
+  border-radius: 25px;
+  transition: width 0.5s ease-in-out;
+}
+
+.progress-day-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #be185d;
+  white-space: nowrap;
+  z-index: 1;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Day Cards Container */
+.day-cards-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  max-width: 1100px;
+  width: 100%;
+  padding: 0 20px;
+}
+
+/* Individual Day Card */
+.day-card {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.15);
+  border: 3px solid #f9a8d4;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  aspect-ratio: 3/4;
+  position: relative;
+}
+
+.day-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(236, 72, 153, 0.25);
+  border-color: #ec4899;
+}
+
+.day-card-unlocked {
+  border-color: #ec4899;
+  box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+}
+
+.day-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.day-card-image-locked {
+  filter: blur(1.5px);
+}
+
+/* Day Card Text Overlay at top */
+.day-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+  padding: 8px 6px;
+  text-align: center;
+}
+
+.day-card-text {
+  display: block;
+  color: #be185d;
+  font-weight: 700;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Day Card Lock Overlay - centered */
+.day-card-lock-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-card-lock-icon {
+  width: 70px;
+  height: auto;
+  opacity: 1;
+}
+
+/* Day Card Bottom Overlay */
+.day-card-bottom-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 6px;
+  text-align: center;
+}
+
+.day-card-reveal-btn {
+  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+}
+
+.day-card-reveal-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+}
+
+.day-card-countdown {
+  display: inline-block;
+  color: #be185d;
+  font-size: 0.6rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 4px 8px;
+  border-radius: 10px;
+}
+
+/* Valentine's Day Special Card */
+.valentines-day-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 25px rgba(236, 72, 153, 0.25);
+  border: 3px solid #ec4899;
+  width: 70%;
+  max-width: 700px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.valentines-day-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 35px rgba(236, 72, 153, 0.35);
+}
+
+.valentines-day-card-unlocked {
+  border-color: #be185d;
+  box-shadow: 0 6px 30px rgba(236, 72, 153, 0.35);
+}
+
+/* Mobile: Remove width constraints */
+@media (max-width: 768px) {
+  .valentines-day-card {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.valentines-card-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.valentines-card-image-locked {
+  filter: blur(1.5px);
+}
+
+/* Valentine's Card Text Overlay at top */
+.valentines-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+  padding: 12px 10px;
+  text-align: center;
+}
+
+.valentines-card-text {
+  display: block;
+  color: #be185d;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Valentine's Card Lock Overlay - centered */
+.valentines-card-lock-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.valentines-card-lock-icon {
+  width: 120px;
+  height: auto;
+  opacity: 1;
+}
+
+/* Valentine's Card Bottom Overlay */
+.valentines-card-bottom-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 10px;
+  text-align: center;
+}
+
+.valentines-card-reveal-btn {
+  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+}
+
+.valentines-card-reveal-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4);
+}
+
+.valentines-card-countdown {
+  display: inline-block;
+  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+  color: white;
+  padding: 10px 30px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Flower Decoration */
+.flower-decoration {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ============================================
+   Responsive Styles for Valentine's Week
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .day-cards-container {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .day-cards-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 0 10px;
+  }
+
+  .valentine-title {
+    font-size: 1.25rem !important;
+    padding: 0 10px;
+  }
+
+  .day-emoji {
+    font-size: 2rem;
+  }
+
+  .day-card-body {
+    padding: 12px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .day-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  /* Center the last (odd) card in 2-column grid */
+  .day-cards-container .day-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 4px);
+  }
+
+  .valentine-title {
+    font-size: 1.1rem !important;
+  }
+
+  .day-counter {
+    font-size: 0.8rem;
+    padding: 6px 16px;
+  }
+
+  .valentines-day-card {
+    min-width: 240px;
+    height: 250px;
+  }
+
+  .valentines-day-card .valentines-card-image {
+    height: 100%;
+    object-fit: cover;
   }
 }

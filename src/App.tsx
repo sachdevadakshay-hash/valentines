@@ -1,39 +1,237 @@
 import { useState, useRef, useCallback } from 'react'
-import { Heart, Sparkles, PartyPopper } from 'lucide-react'
+import { Heart } from 'lucide-react'
 
-// Cute character component
-const CuteCharacter = ({ isHappy }: { isHappy: boolean }) => (
-    <div className={`relative transition-all duration-500 ${isHappy ? 'animate-bounce' : 'animate-float'}`}>
-        {/* Character body */}
-        <div className="relative w-32 h-32 mx-auto">
-            {/* Ears */}
-            <div className="absolute -top-2 left-4 w-8 h-10 bg-amber-200 rounded-full transform -rotate-12 border-2 border-amber-300" />
-            <div className="absolute -top-2 right-4 w-8 h-10 bg-amber-200 rounded-full transform rotate-12 border-2 border-amber-300" />
+// ============================================
+// DEV MODE TOGGLE
+// Set to true to unlock all cards for development
+// Set to false for production (time-based locks)
+// ============================================
+const DEV_MODE = true
 
-            {/* Head */}
-            <div className="absolute inset-0 bg-amber-100 rounded-full border-2 border-amber-200 shadow-lg">
-                {/* Eyes */}
-                <div className="absolute top-10 left-8 w-4 h-4 bg-gray-800 rounded-full">
-                    <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-white rounded-full" />
+// Valentine's Week days data with images and unlock dates
+const valentineDays = [
+    { date: 'Feb 7', name: 'Rose Day', image: '/rose day.png', unlockDay: 7 },
+    { date: 'Feb 8', name: 'Propose Day', image: '/proposeday.png', unlockDay: 8 },
+    { date: 'Feb 9', name: 'Chocolate Day', image: '/chocolate day.png', unlockDay: 9 },
+    { date: 'Feb 10', name: 'Teddy Day', image: '/teddy day.png', unlockDay: 10 },
+    { date: 'Feb 11', name: 'Promise Day', image: '/promise day.png', unlockDay: 11 },
+    { date: 'Feb 12', name: 'Hug Day', image: '/hug day.png', unlockDay: 12 },
+    { date: 'Feb 13', name: 'Kiss Day', image: '/kiss day.png', unlockDay: 13 },
+]
+
+// Helper function to check if a day is unlocked
+const isDayUnlocked = (unlockDay: number): boolean => {
+    // DEV MODE: All days unlocked for development
+    if (DEV_MODE) return true
+
+    const now = new Date()
+    const currentMonth = now.getMonth() + 1 // 0-indexed
+    const currentDay = now.getDate()
+
+    // Unlocked if we're in February and past or on the unlock day
+    // Or if we're past February
+    if (currentMonth > 2) return true
+    if (currentMonth === 2 && currentDay >= unlockDay) return true
+    return false
+}
+
+// Helper function to get days until unlock
+const getDaysUntilUnlock = (unlockDay: number): number => {
+    const now = new Date()
+    const currentYear = now.getFullYear()
+    const unlockDate = new Date(currentYear, 1, unlockDay) // February is month 1 (0-indexed)
+
+    const diffTime = unlockDate.getTime() - now.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    return Math.max(0, diffDays)
+}
+
+// Day Card Component - Image with text overlay, lock state, and reveal button
+const DayCard = ({ date, image, name, unlockDay, onReveal }: {
+    date: string;
+    image: string;
+    name: string;
+    unlockDay: number;
+    onReveal: () => void;
+}) => {
+    const isUnlocked = isDayUnlocked(unlockDay)
+    const daysUntil = getDaysUntilUnlock(unlockDay)
+
+    return (
+        <div className={`day-card ${isUnlocked ? 'day-card-unlocked' : ''}`}>
+            <img
+                src={image}
+                alt={name}
+                className={`day-card-image ${!isUnlocked ? 'day-card-image-locked' : ''}`}
+            />
+            {/* Text overlay at top */}
+            <div className="day-card-overlay">
+                <span className="day-card-text">{date}:</span>
+                <span className="day-card-text">{name}</span>
+            </div>
+
+            {/* Lock overlay for locked cards */}
+            {!isUnlocked && (
+                <div className="day-card-lock-overlay">
+                    <img src="/lock.png" alt="Locked" className="day-card-lock-icon" />
                 </div>
-                <div className="absolute top-10 right-8 w-4 h-4 bg-gray-800 rounded-full">
-                    <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-white rounded-full" />
+            )}
+
+            {/* Bottom overlay: Reveal button or countdown */}
+            <div className="day-card-bottom-overlay">
+                {isUnlocked ? (
+                    <button className="day-card-reveal-btn" onClick={onReveal}>
+                        Reveal
+                    </button>
+                ) : (
+                    <span className="day-card-countdown">Opens in {daysUntil} day{daysUntil !== 1 ? 's' : ''}</span>
+                )}
+            </div>
+        </div>
+    )
+}
+
+// Valentine's Day Special Card
+const ValentinesDayCard = ({ onReveal }: { onReveal: () => void }) => {
+    const isUnlocked = isDayUnlocked(14)
+    const daysUntil = getDaysUntilUnlock(14)
+
+    return (
+        <div className={`valentines-day-card ${isUnlocked ? 'valentines-day-card-unlocked' : ''}`}>
+            <img
+                src="/valentines day.png"
+                alt="Valentine's Day"
+                className={`valentines-card-image ${!isUnlocked ? 'valentines-card-image-locked' : ''}`}
+            />
+            {/* Text overlay at top */}
+            <div className="valentines-card-overlay">
+                <span className="valentines-card-text">Feb 14:</span>
+                <span className="valentines-card-text">Valentine's Day</span>
+            </div>
+
+            {/* Lock overlay for locked card */}
+            {!isUnlocked && (
+                <div className="valentines-card-lock-overlay">
+                    <img src="/lock.png" alt="Locked" className="valentines-card-lock-icon" />
                 </div>
+            )}
 
-                {/* Cheeks */}
-                <div className="absolute top-14 left-5 w-5 h-3 bg-pink-300 rounded-full opacity-60" />
-                <div className="absolute top-14 right-5 w-5 h-3 bg-pink-300 rounded-full opacity-60" />
+            {/* Bottom overlay: Reveal button or countdown */}
+            <div className="valentines-card-bottom-overlay">
+                {isUnlocked ? (
+                    <button className="valentines-card-reveal-btn" onClick={onReveal}>
+                        Reveal
+                    </button>
+                ) : (
+                    <span className="valentines-card-countdown">Opens in {daysUntil} day{daysUntil !== 1 ? 's' : ''}</span>
+                )}
+            </div>
+        </div>
+    )
+}
 
-                {/* Mouth */}
-                <div className={`absolute top-16 left-1/2 transform -translate-x-1/2 transition-all duration-300 ${isHappy ? 'w-6 h-4' : 'w-3 h-2'}`}>
-                    <div className={`w-full h-full bg-pink-400 rounded-full ${isHappy ? 'rounded-b-full' : 'rounded-full'}`} />
-                </div>
+// Hello Kitty Corner Decoration
+const HelloKittyDecoration = ({ position }: { position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' }) => {
+    const positionClasses = {
+        'top-left': 'top-4 left-4',
+        'top-right': 'top-4 right-4',
+        'bottom-left': 'bottom-4 left-4',
+        'bottom-right': 'bottom-4 right-4',
+    }
 
-                {/* Heart on head */}
-                <div className={`absolute -top-3 right-2 transition-all duration-500 ${isHappy ? 'animate-heartbeat scale-125' : ''}`}>
-                    <Heart className="w-8 h-8 text-pink-500 fill-pink-500" />
+    return (
+        <div className={`fixed ${positionClasses[position]} w-24 h-24 pointer-events-none z-20 opacity-80`}>
+            <img
+                src="/hello-kitty.png"
+                alt="Hello Kitty"
+                className="w-full h-full object-contain"
+            />
+        </div>
+    )
+}
+
+// Flower Decoration
+const FlowerDecoration = ({ className }: { className?: string }) => (
+    <div className={`flower-decoration ${className || ''}`}>
+        🌸
+    </div>
+)
+
+// Progress Bar Component
+const ProgressBar = ({ currentDay }: { currentDay: number }) => {
+    // Calculate progress: Day 1 (Feb 7) = 0%, Day 8 (Feb 14) = 100%
+    const totalDays = 8 // Feb 7 to Feb 14
+    const progress = Math.min(((currentDay) / (totalDays - 1)) * 100, 100)
+
+    return (
+        <div className="progress-bar-container">
+            <span className="progress-bow">🎀</span>
+            <div className="progress-bar-track">
+                <div
+                    className="progress-bar-fill"
+                    style={{ width: `${progress}%` }}
+                />
+                <div className="progress-day-label">
+                    Day {currentDay} of 7
                 </div>
             </div>
+            <span className="progress-bow">🎀</span>
+        </div>
+    )
+}
+
+
+const ValentineWeekPage = () => {
+    const handleReveal = (dayName: string) => {
+        // TODO: Navigate to the day's reveal page
+        console.log(`Revealing ${dayName}`)
+    }
+
+    return (
+        <div className="min-h-screen valentine-gradient flex flex-col items-center py-6 px-4 relative overflow-hidden">
+            {/* Header */}
+            <div className="text-center mb-6 z-10">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                    <span className="text-pink-500 text-2xl">🎀</span>
+                    <span className="text-pink-600 text-sm font-medium tracking-wide">Valentine's Week 2025</span>
+                    <span className="text-pink-500 text-2xl">🎀</span>
+                </div>
+                <h1 className="valentine-title text-2xl md:text-3xl lg:text-4xl font-bold text-pink-700 mb-4">
+                    Valentine's Week: Unlock Our Love Story
+                </h1>
+
+                {/* Progress Bar */}
+                <ProgressBar currentDay={1} />
+            </div>
+
+            {/* Day Cards Grid */}
+            <div className="day-cards-container z-10">
+                {valentineDays.map((day) => (
+                    <DayCard
+                        key={day.date}
+                        {...day}
+                        onReveal={() => handleReveal(day.name)}
+                    />
+                ))}
+            </div>
+
+            {/* Valentine's Day Special Card */}
+            <div className="mt-6 z-10 w-full flex justify-center px-4">
+                <ValentinesDayCard onReveal={() => handleReveal("Valentine's Day")} />
+            </div>
+        </div>
+    )
+}
+
+// Hello Kitty character component
+const CuteCharacter = ({ isHappy }: { isHappy: boolean }) => (
+    <div className={`relative transition-all duration-500 ${isHappy ? 'animate-bounce' : 'animate-float'}`}>
+        <div className="relative w-60 h-60 mx-auto">
+            <img
+                src="/hello-kitty.png"
+                alt="Hello Kitty"
+                className="w-full h-full object-contain"
+            />
         </div>
     </div>
 )
@@ -87,58 +285,38 @@ const Confetti = () => {
 
 // Floating hearts background
 const FloatingHearts = () => (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {Array.from({ length: 15 }).map((_, i) => (
-            <Heart
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-50">
+        {Array.from({ length: 8 }).map((_, i) => (
+            <span
                 key={i}
-                className="absolute floating-heart text-pink-300"
+                className="absolute floating-heart"
                 style={{
                     left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    width: `${20 + Math.random() * 30}px`,
-                    height: `${20 + Math.random() * 30}px`,
-                    animationDelay: `${Math.random() * 5}s`,
-                    animationDuration: `${6 + Math.random() * 4}s`,
+                    fontSize: `${25 + Math.random() * 25}px`,
+                    animationDelay: `${i * 1.5}s`,
+                    animationDuration: `${12 + Math.random() * 6}s`,
                 }}
-            />
+            >
+                🩷
+            </span>
         ))}
     </div>
 )
 
-// Sparkle effect
-const SparklesEffect = ({ show }: { show: boolean }) => {
-    if (!show) return null
 
-    return (
-        <div className="fixed inset-0 pointer-events-none z-40">
-            {Array.from({ length: 20 }).map((_, i) => (
-                <Sparkles
-                    key={i}
-                    className="absolute text-yellow-400 animate-sparkle"
-                    style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        width: `${16 + Math.random() * 16}px`,
-                        height: `${16 + Math.random() * 16}px`,
-                        animationDelay: `${Math.random() * 2}s`,
-                    }}
-                />
-            ))}
-        </div>
-    )
-}
 
-function App() {
-    const [saidYes, setSaidYes] = useState(false)
+// Question Page Component
+const QuestionPage = ({ onYes }: { onYes: () => void }) => {
     const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 })
     const [noAttempts, setNoAttempts] = useState(0)
-    const [showConfetti, setShowConfetti] = useState(false)
+    const [noButtonScale, setNoButtonScale] = useState(1)
+    const [noButtonVisible, setNoButtonVisible] = useState(true)
     const containerRef = useRef<HTMLDivElement>(null)
     const noButtonRef = useRef<HTMLButtonElement>(null)
 
     // Messages that appear as the user tries to click "No"
     const noMessages = [
-        "\"No\" seems a bit shy 💜",
+        "I hope you say yesssss! 💕",
         "Are you sure? 🤔",
         "Think again! 💭",
         "Pretty please? 🥺",
@@ -147,7 +325,7 @@ function App() {
         "Just say yes! 💝",
         "I believe in us! ✨",
         "You know you want to! 😊",
-        "Come on, say yes! 🌟",
+        "The button is disappearing! 🌟",
     ]
 
     const moveNoButton = useCallback(() => {
@@ -165,21 +343,21 @@ function App() {
         const newY = Math.random() * maxY - maxY / 2
 
         setNoButtonPosition({ x: newX, y: newY })
-        setNoAttempts(prev => Math.min(prev + 1, noMessages.length - 1))
+        setNoAttempts(prev => {
+            const newAttempts = prev + 1
+            // After 10 attempts, hide the button completely
+            if (newAttempts >= 10) {
+                setNoButtonVisible(false)
+            }
+            return Math.min(newAttempts, noMessages.length - 1)
+        })
+        // Shrink the button with each attempt (10% smaller each time)
+        setNoButtonScale(prev => Math.max(prev - 0.1, 0))
     }, [noMessages.length])
-
-    const handleYes = () => {
-        setSaidYes(true)
-        setShowConfetti(true)
-        // Hide confetti after animation
-        setTimeout(() => setShowConfetti(false), 5000)
-    }
 
     // Handle mouse approaching the No button
     const handleNoMouseEnter = () => {
-        if (!saidYes) {
-            moveNoButton()
-        }
+        moveNoButton()
     }
 
     return (
@@ -189,98 +367,81 @@ function App() {
         >
             {/* Background effects */}
             <FloatingHearts />
-            {showConfetti && <Confetti />}
-            <SparklesEffect show={saidYes} />
 
             {/* Main card */}
-            <div className={`glass-card rounded-3xl p-8 md:p-12 max-w-md w-full shadow-2xl relative z-10 transition-all duration-500 ${saidYes ? 'scale-105' : ''}`}>
+            <div className="glass-card rounded-3xl p-8 md:p-12 max-w-md w-full shadow-2xl relative z-10">
                 {/* Character */}
                 <div className="mb-6">
-                    <CuteCharacter isHappy={saidYes} />
+                    <CuteCharacter isHappy={false} />
                 </div>
 
                 {/* Question */}
-                <h1 className={`text-2xl md:text-3xl font-bold text-center text-gray-800 mb-2 transition-all duration-500 ${saidYes ? 'animate-slide-up' : ''}`}>
-                    {saidYes ? (
-                        <span className="flex items-center justify-center gap-2">
-                            YAY! <PartyPopper className="w-8 h-8 text-pink-500 animate-bounce" />
-                        </span>
-                    ) : (
-                        "Rose, Will you be my valentine?"
-                    )}
+                <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-2">
+                    Rose, will you be my Valentine?
                 </h1>
 
-                {/* Success message */}
-                {saidYes && (
-                    <div className="text-center animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                        <p className="text-lg text-pink-600 font-medium mb-4">
-                            You made me the happiest person! 💕
-                        </p>
-                        <div className="relative w-48 h-48 mx-auto rounded-2xl overflow-hidden shadow-xl animate-bounce-in">
-                            <img
-                                src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzZ6YjB3d2R5Z2J4Z3J4Z2J4Z2J4Z2J4Z2J4Z2J4Z2J4Z2J4ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7abB06u9bNzA8lu8/giphy.gif"
-                                alt="Celebration"
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                    // Fallback if GIF fails to load
-                                    const target = e.target as HTMLImageElement
-                                    target.src = 'https://media.giphy.com/media/26tOZ42Mg6pbTUPHW/giphy.gif'
-                                }}
-                            />
-                        </div>
-                        <div className="mt-6 flex justify-center gap-2">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                                <Heart
-                                    key={i}
-                                    className="w-6 h-6 text-pink-500 fill-pink-500 animate-heartbeat"
-                                    style={{ animationDelay: `${i * 0.2}s` }}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                )}
-
                 {/* Buttons */}
-                {!saidYes && (
-                    <div className="flex flex-col items-center gap-4 mt-8">
-                        <div className="flex gap-4 items-center justify-center relative">
-                            {/* Yes Button */}
-                            <button
-                                onClick={handleYes}
-                                className="btn-yes px-8 py-4 rounded-full text-white font-bold text-lg shadow-lg animate-pulse-glow flex items-center gap-2"
-                            >
-                                <Heart className="w-5 h-5 fill-white" />
-                                Yes
-                            </button>
+                <div className="flex flex-col items-center gap-4 mt-8">
+                    <div className="flex gap-4 items-center justify-center relative">
+                        {/* Yes Button */}
+                        <button
+                            onClick={onYes}
+                            className="btn-yes px-8 py-4 rounded-full text-white font-bold text-lg shadow-lg animate-pulse-glow flex items-center gap-2"
+                        >
+                            <Heart className="w-5 h-5 fill-white" />
+                            Yes
+                        </button>
 
-                            {/* No Button - runs away */}
+                        {/* No Button - runs away and shrinks */}
+                        {noButtonVisible && (
                             <button
                                 ref={noButtonRef}
                                 onMouseEnter={handleNoMouseEnter}
                                 onClick={moveNoButton}
                                 className="btn-no px-6 py-3 rounded-full text-gray-600 font-semibold shadow-md hover:shadow-lg relative"
                                 style={{
-                                    transform: `translate(${noButtonPosition.x}px, ${noButtonPosition.y}px)`,
-                                    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    transform: `translate(${noButtonPosition.x}px, ${noButtonPosition.y}px) scale(${noButtonScale})`,
+                                    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
+                                    opacity: noButtonScale,
                                 }}
                             >
                                 No
                             </button>
-                        </div>
-
-                        {/* Funny message */}
-                        <p className="text-sm text-pink-600/70 text-center mt-4 animate-pulse">
-                            {noMessages[noAttempts]}
-                        </p>
+                        )}
                     </div>
-                )}
-            </div>
 
-            {/* Decorative elements */}
-            <div className="fixed bottom-4 left-4 text-pink-600/40 text-sm font-medium">
-                Made with 💕 By Daksh
+                    {/* Funny message */}
+                    <p className="text-sm text-pink-600/70 text-center mt-4 animate-pulse">
+                        {noMessages[noAttempts]}
+                    </p>
+                </div>
             </div>
         </div>
+    )
+}
+
+function App() {
+    const [currentPage, setCurrentPage] = useState<'question' | 'valentineWeek'>('question')
+    const [showConfetti, setShowConfetti] = useState(false)
+
+    const handleYes = () => {
+        setShowConfetti(true)
+        // Show confetti for a moment, then transition to Valentine's Week page
+        setTimeout(() => {
+            setCurrentPage('valentineWeek')
+            setShowConfetti(false)
+        }, 2000)
+    }
+
+    return (
+        <>
+            {showConfetti && <Confetti />}
+            {currentPage === 'question' ? (
+                <QuestionPage onYes={handleYes} />
+            ) : (
+                <ValentineWeekPage />
+            )}
+        </>
     )
 }
 
