@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import { Heart } from 'lucide-react'
+import { eventPagesData, EventPageData } from './eventContent'
 
 // ============================================
 // DEV MODE TOGGLE
@@ -181,8 +182,8 @@ const ProgressBar = ({ currentDay }: { currentDay: number }) => {
 }
 
 
-// Rose Day Reveal Page Component
-const RoseDayPage = ({ onBack }: { onBack: () => void }) => {
+// Generic Event Day Reveal Page Component
+const EventDayPage = ({ eventData, onBack }: { eventData: EventPageData, onBack: () => void }) => {
     const [messageRevealed, setMessageRevealed] = useState(false)
 
     const handleRevealMessage = () => {
@@ -199,7 +200,7 @@ const RoseDayPage = ({ onBack }: { onBack: () => void }) => {
                     <span className="text-lg">🎀</span>
                 </div>
                 <h1 className="valentine-title text-2xl md:text-3xl lg:text-4xl font-bold text-rose-600">
-                    {messageRevealed ? 'Rose Day: A Special Message' : 'Rose Day: Unlocking Our Love Story'}
+                    {messageRevealed ? eventData.titlePostReveal : eventData.titlePreReveal}
                 </h1>
             </div>
 
@@ -209,21 +210,21 @@ const RoseDayPage = ({ onBack }: { onBack: () => void }) => {
                     <div className="rose-day-card">
                         <div className="rose-day-card-content">
                             <p className="rose-day-text-main">
-                                Roses speak a thousand words of love.
+                                {eventData.mainMessage1}
                             </p>
                             <p className="rose-day-text-main">
-                                Here's to the start of our beautiful week together!
+                                {eventData.mainMessage2}
                             </p>
                             <p className="rose-day-text-sub">
-                                Tap to reveal your special message.
+                                {eventData.subMessage}
                             </p>
                         </div>
 
-                        {/* Rose Couple Image */}
+                        {/* Couple Image */}
                         <div className="rose-couple-container">
                             <img
-                                src="/rosecouple.png"
-                                alt="Rose Couple"
+                                src={eventData.coupleImage}
+                                alt={`${eventData.name} Couple`}
                                 className="rose-couple-image"
                             />
                         </div>
@@ -245,8 +246,8 @@ const RoseDayPage = ({ onBack }: { onBack: () => void }) => {
                     {/* Left - Hello Kitty Couple */}
                     <div className="rose-revealed-left">
                         <img
-                            src="/rosecouple.png"
-                            alt="Rose Couple"
+                            src={eventData.coupleImage}
+                            alt={`${eventData.name} Couple`}
                             className="rose-couple-image-revealed"
                         />
                     </div>
@@ -255,14 +256,16 @@ const RoseDayPage = ({ onBack }: { onBack: () => void }) => {
                     <div className="rose-revealed-center">
                         <div className="love-letter-card">
                             <div className="love-letter-inner">
-                                <p className="love-letter-greeting">My Dearest,</p>
+                                <p className="love-letter-greeting">{eventData.letterGreeting}</p>
                                 <p className="love-letter-poem">
-                                    Roses are red, my love is true.<br />
-                                    This special day is just for you.<br />
-                                    Every petal speaks my heart, to<br />
-                                    you, my valentine, from the start.
+                                    {eventData.letterPoem.map((line, index) => (
+                                        <span key={index}>
+                                            {line}
+                                            {index < eventData.letterPoem.length - 1 && <br />}
+                                        </span>
+                                    ))}
                                 </p>
-                                <p className="love-letter-closing">Love always.</p>
+                                <p className="love-letter-closing">{eventData.letterClosing}</p>
                             </div>
                         </div>
                     </div>
@@ -273,9 +276,9 @@ const RoseDayPage = ({ onBack }: { onBack: () => void }) => {
                             <video
                                 className="rose-day-video"
                                 controls
-                                poster="/rose-video-poster.jpg"
+                                poster={eventData.videoPoster}
                             >
-                                <source src="/rose-day-video.mp4" type="video/mp4" />
+                                <source src={eventData.videoSrc} type="video/mp4" />
                                 Your browser does not support the video tag.
                             </video>
                         </div>
@@ -293,6 +296,7 @@ const RoseDayPage = ({ onBack }: { onBack: () => void }) => {
         </div>
     )
 }
+
 
 const ValentineWeekPage = ({ onRevealDay }: { onRevealDay: (dayName: string) => void }) => {
     return (
@@ -529,7 +533,7 @@ const QuestionPage = ({ onYes }: { onYes: () => void }) => {
 }
 
 function App() {
-    const [currentPage, setCurrentPage] = useState<'question' | 'valentineWeek' | 'roseDay'>('question')
+    const [currentPage, setCurrentPage] = useState<string>('question')
     const [showConfetti, setShowConfetti] = useState(false)
 
     const handleYes = () => {
@@ -542,16 +546,21 @@ function App() {
     }
 
     const handleRevealDay = (dayName: string) => {
-        if (dayName === 'Rose Day') {
-            setCurrentPage('roseDay')
-        } else {
-            console.log(`Revealing ${dayName}`)
+        // Check if it's one of the supported event days (not Valentine's Day)
+        if (eventPagesData[dayName]) {
+            setCurrentPage(dayName)
+        } else if (dayName === "Valentine's Day") {
+            // Valentine's Day has its own special handling (to be implemented)
+            console.log("Valentine's Day page - coming soon!")
         }
     }
 
     const handleBackToWeek = () => {
         setCurrentPage('valentineWeek')
     }
+
+    // Get event data if we're on an event page
+    const currentEventData = eventPagesData[currentPage]
 
     return (
         <>
@@ -562,8 +571,8 @@ function App() {
             {currentPage === 'valentineWeek' && (
                 <ValentineWeekPage onRevealDay={handleRevealDay} />
             )}
-            {currentPage === 'roseDay' && (
-                <RoseDayPage onBack={handleBackToWeek} />
+            {currentEventData && (
+                <EventDayPage eventData={currentEventData} onBack={handleBackToWeek} />
             )}
         </>
     )
