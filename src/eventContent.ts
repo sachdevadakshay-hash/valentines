@@ -1,9 +1,3 @@
-// ============================================
-// 💝 VALENTINE'S WEEK EVENT CONTENT CONFIGURATION
-// ============================================
-// 
-// Edit this file to customize the content for each event day!
-// 
 // For each event, you can change:
 // - titlePreReveal: The title shown before clicking "Reveal"
 // - titlePostReveal: The title shown after clicking "Reveal"
@@ -16,7 +10,7 @@
 // - letterPoem: Array of poem lines (each line is a separate string)
 // - letterClosing: The sign-off of the love letter
 //
-// ============================================
+
 
 export type EventPageData = {
     name: string;
@@ -28,6 +22,7 @@ export type EventPageData = {
     coupleImage: string;
     videoSrc: string;
     videoPoster: string;
+    imageSrc?: string; // New field for image option
     letterGreeting: string;
     letterPoem: string[];
     letterClosing: string;
@@ -50,9 +45,12 @@ export const eventPagesData: Record<string, EventPageData> = {
         // 📷 Image: Place your image in /public folder
         coupleImage: '/rosecouple.png',
 
+        // 📷 Post-reveal Image (replaces video)
+        imageSrc: '/', // Replace with your actual image path
+
         // 🎬 Video: Place your video in /public folder
-        videoSrc: '/rd.JPG',
-        videoPoster: '/rose-video-poster.jpg',
+        videoSrc: '', // Kept empty or remove
+        videoPoster: '',
 
         // 💌 Love Letter Content
         letterGreeting: 'My Dearest,',
@@ -63,9 +61,7 @@ export const eventPagesData: Record<string, EventPageData> = {
             'you, my valentine, from the start.'
         ],
         letterClosing: 'Love always.'
-    },
-
-    // ============================================
+    },    // ============================================
     // 💍 PROPOSE DAY (February 8)
     // ============================================
     'Propose Day': {
