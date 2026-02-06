@@ -51,7 +51,7 @@ export const eventPagesData: Record<string, EventPageData> = {
         coupleImage: '/rosecouple.png',
 
         // 🎬 Video: Place your video in /public folder
-        videoSrc: '/v4.MP4',
+        videoSrc: '/rd.JPG',
         videoPoster: '/rose-video-poster.jpg',
 
         // 💌 Love Letter Content
