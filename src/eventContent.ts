@@ -46,22 +46,25 @@ export const eventPagesData: Record<string, EventPageData> = {
         coupleImage: '/rosecouple.png',
 
         // 📷 Post-reveal Image (replaces video)
-        imageSrc: '/', // Replace with your actual image path
+        imageSrc: '/re.jpg', // Replace with your actual image path
 
         // 🎬 Video: Place your video in /public folder
         videoSrc: '', // Kept empty or remove
         videoPoster: '',
 
         // 💌 Love Letter Content
-        letterGreeting: 'My Dearest,',
+        letterGreeting: 'My Byoli',
         letterPoem: [
-            'Roses are red, my love is true.',
-            'This special day is just for you.',
-            'Every petal speaks my heart, to',
-            'you, my valentine, from the start.'
+            'heyy baby i know i could not be with you physically but i hope this website could make up for it',
+            'this is the least i could have done for you ; I hope you like my virtual roses eheheh',
+            'Unlike real roses this one would never die just like our love that will be forever. I hope i show this website to ashleey and deni someday they will be so proud of daddaa ehehe',
+            'So, Happy Rose Day my forever valentine and Happy anniversary pre eve too baby its about to be 10 whole months just the beginning of our beautiful long journey',
+            'Love you always my babyyyy 💕'
         ],
-        letterClosing: 'Love always.'
-    },    // ============================================
+        letterClosing: 'Together Forever and Ever'
+    },
+
+    // ============================================
     // 💍 PROPOSE DAY (February 8)
     // ============================================
     'Propose Day': {

@@ -7,7 +7,7 @@ import { eventPagesData, EventPageData, valentinesReasons, valentinesPromises, v
 // Set to true to unlock all cards for development
 // Set to false for production (time-based locks)
 // ============================================
-const DEV_MODE = true
+const DEV_MODE = false
 
 // Valentine's Week days data with images and unlock dates
 const valentineDays = [
@@ -130,6 +130,8 @@ const ValentinesDayCard = ({ onReveal }: { onReveal: () => void }) => {
         </div>
     )
 }
+
+
 
 // Hello Kitty Corner Decoration
 const HelloKittyDecoration = ({ position }: { position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' }) => {
@@ -619,19 +621,25 @@ const EventDayPage = ({ eventData, onBack }: { eventData: EventPageData, onBack:
                             </div>
                         </div>
 
-                        {/* Right - Video Player */}
+                        {/* Right - Video or Image Display */}
                         <div className="rose-revealed-right">
-                            <div className="video-container">
-                                <video
-                                    className="rose-day-video"
-                                    autoPlay
-                                    loop
-                                    playsInline
-                                    poster={eventData.videoPoster}
-                                >
-                                    <source src={eventData.videoSrc} type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video>
+                            <div className={`video-container ${eventData.imageSrc ? 'is-image' : ''}`}>
+                                {eventData.imageSrc ? (
+                                    <img
+                                        src={eventData.imageSrc}
+                                        alt={eventData.titlePostReveal}
+                                        className="rose-day-video is-image"
+                                    />
+                                ) : (
+                                    <video
+                                        className="rose-day-video"
+                                        controls
+                                        poster={eventData.videoPoster}
+                                    >
+                                        <source src={eventData.videoSrc} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -653,6 +661,9 @@ const EventDayPage = ({ eventData, onBack }: { eventData: EventPageData, onBack:
 const ValentineWeekPage = ({ onRevealDay }: { onRevealDay: (dayName: string) => void }) => {
     return (
         <div className="min-h-screen valentine-gradient flex flex-col items-center py-6 px-4 relative overflow-hidden">
+            <HelloKittyDecoration position="top-left" />
+            <HelloKittyDecoration position="bottom-right" />
+
             {/* Header */}
             <div className="text-center mb-6 z-10">
                 <div className="flex items-center justify-center gap-2 mb-2">
@@ -683,6 +694,9 @@ const ValentineWeekPage = ({ onRevealDay }: { onRevealDay: (dayName: string) => 
             <div className="mt-6 z-10 w-full flex justify-center px-4">
                 <ValentinesDayCard onReveal={() => onRevealDay("Valentine's Day")} />
             </div>
+
+            <FlowerDecoration className="absolute top-1/4 -left-4 w-16 h-16 opacity-60 rotate-45" />
+            <FlowerDecoration className="absolute bottom-1/4 -right-4 w-16 h-16 opacity-60 -rotate-12" />
         </div>
     )
 }
@@ -841,7 +855,7 @@ const QuestionPage = ({ onYes }: { onYes: () => void }) => {
 
                 {/* Question */}
                 <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-2">
-                    Rose, will you be my Valentine?
+                    Navya, will you be my Valentine?
                 </h1>
 
                 {/* Buttons */}
