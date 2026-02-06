@@ -131,32 +131,6 @@ const ValentinesDayCard = ({ onReveal }: { onReveal: () => void }) => {
     )
 }
 
-// Hello Kitty Corner Decoration
-const HelloKittyDecoration = ({ position }: { position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' }) => {
-    const positionClasses = {
-        'top-left': 'top-4 left-4',
-        'top-right': 'top-4 right-4',
-        'bottom-left': 'bottom-4 left-4',
-        'bottom-right': 'bottom-4 right-4',
-    }
-
-    return (
-        <div className={`fixed ${positionClasses[position]} w-24 h-24 pointer-events-none z-20 opacity-80`}>
-            <img
-                src="/hello-kitty.png"
-                alt="Hello Kitty"
-                className="w-full h-full object-contain"
-            />
-        </div>
-    )
-}
-
-// Flower Decoration
-const FlowerDecoration = ({ className }: { className?: string }) => (
-    <div className={`flower-decoration ${className || ''}`}>
-        🌸
-    </div>
-)
 
 // Progress Bar Component
 const ProgressBar = ({ currentDay }: { currentDay: number }) => {
